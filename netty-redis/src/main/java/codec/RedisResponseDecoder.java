@@ -6,34 +6,32 @@ import io.netty.handler.codec.ByteToMessageDecoder;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Optional;
 
 public class RedisResponseDecoder extends ByteToMessageDecoder {
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
+        // 跳过$
         in.readByte();
         // 读取长度
         int len = 0;
         char cur;
-        boolean negFlag = false;
         while ((cur = (char) in.readByte()) != '\r') {
             if (cur == '-') {
-                negFlag = true;
+                // 说明是空值，跳过后续的1\r\n
+                out.add(Optional.empty());
+                in.readBytes(3);
+                return;
             }
             len = len * 10 + (cur - '0');
         }
-        if (negFlag) {
-            len *= -1;
-        }
+        // 当前cur位于\r，跳过后面的\n
+        in.readByte();
 
-        if (len < 0) {
-            out.add(null);
-        } else {
-            in.readByte();
-            CharSequence sequence = in.readCharSequence(len, StandardCharsets.UTF_8);
-            String msg = sequence.toString();
-            out.add(msg);
-        }
+        CharSequence sequence = in.readCharSequence(len, StandardCharsets.UTF_8);
+        String msg = sequence.toString();
+        out.add(Optional.of(msg));
         // 跳过结尾的\r\n
         in.readBytes(2);
     }

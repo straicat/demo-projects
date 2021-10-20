@@ -13,9 +13,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 
-/**
- * https://www.cnblogs.com/demingblog/p/9989699.html
- */
+
 public class RedisClient {
     private final InetSocketAddress address;
 
