@@ -8,11 +8,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class RedisResponseDecoder extends ByteToMessageDecoder {
-    private static final byte RESP_PREFIX = '$';
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
-        byte prefix = in.readByte();
+        in.readByte();
         // 读取长度
         int len = 0;
         char cur;
@@ -32,8 +31,8 @@ public class RedisResponseDecoder extends ByteToMessageDecoder {
         } else {
             in.readByte();
             CharSequence sequence = in.readCharSequence(len, StandardCharsets.UTF_8);
-            String ret = sequence.toString();
-            out.add(ret);
+            String msg = sequence.toString();
+            out.add(msg);
         }
         // 跳过结尾的\r\n
         in.readBytes(2);

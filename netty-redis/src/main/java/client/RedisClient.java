@@ -2,58 +2,73 @@ package client;
 
 import codec.RedisResponseDecoder;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.util.AttributeKey;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
-import java.nio.charset.StandardCharsets;
 
+/**
+ * https://www.cnblogs.com/demingblog/p/9989699.html
+ */
 public class RedisClient {
-    private Bootstrap bootstrap;
-    private EventLoopGroup group;
-    private Channel channel;
+    private final InetSocketAddress address;
 
-    public RedisClient(InetSocketAddress address) {
-        bootstrap = new Bootstrap();
-        group = new NioEventLoopGroup();
+    public RedisClient(String host, int port) {
+        address = new InetSocketAddress(host, port);
+    }
+
+    public void start() {
+        Bootstrap bootstrap = new Bootstrap();
+        EventLoopGroup group = new NioEventLoopGroup();
 
         try {
             bootstrap.group(group)
                     .channel(NioSocketChannel.class)
-                    .option(ChannelOption.TCP_NODELAY, true)
+                    .attr(AttributeKey.newInstance("address"), address)
                     .handler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel ch) throws Exception {
                             ch.pipeline().addLast(new RedisResponseDecoder());
-                            ch.pipeline().addLast(new RedisClientHandler());
+                            ch.pipeline().addLast(new RedisResponseHandler());
+                            ch.pipeline().addLast(new RedisRequestHandler());
                         }
                     });
-            ChannelFuture future = bootstrap.connect(address).sync();
-            channel = future.channel();
-        } catch (InterruptedException e) {
+
+            // 连接Redis服务器
+            Channel channel = bootstrap.connect(address).sync().channel();
+            BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+            System.out.printf("%s:%d> ", address.getHostString(), address.getPort());
+            ChannelFuture future = null;
+            while (true) {
+                String s = in.readLine();
+                if (s == null || "quit".equalsIgnoreCase(s)) {
+                    break;
+                }
+                future = channel.writeAndFlush(s);
+                future.addListener((ChannelFutureListener) f -> {
+                    if (!f.isSuccess()) {
+                        f.cause().printStackTrace();
+                    }
+                });
+            }
+            if (future != null) {
+                future.sync();
+            }
+        } catch (InterruptedException | IOException e) {
             e.printStackTrace();
         } finally {
             group.shutdownGracefully();
         }
     }
 
-    public void get(String key) {
-        channel.writeAndFlush(Unpooled.copiedBuffer("GET " + key + "\n", StandardCharsets.UTF_8));
-    }
-
-    public void close() {
-        if (channel != null) {
-            channel.close();
-        }
-        group.shutdownGracefully();
-    }
-
     public static void main(String[] args) {
-        RedisClient client = new RedisClient(new InetSocketAddress("127.0.0.1", 6379));
-        client.get("test");
-        client.close();
+        RedisClient client = new RedisClient("127.0.0.1", 6379);
+        client.start();
     }
 }
