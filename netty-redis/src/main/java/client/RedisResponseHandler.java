@@ -16,7 +16,7 @@ public class RedisResponseHandler extends SimpleChannelInboundHandler<Optional<S
         } else {
             System.out.println("(nil)");
         }
-        InetSocketAddress address = (InetSocketAddress) ctx.channel().attr(AttributeKey.valueOf("address")).get();
-        System.out.printf("%s:%d> ", address.getHostString(), address.getPort());
+        String prompt = (String) ctx.channel().attr(AttributeKey.valueOf("prompt")).get();
+        System.out.print(prompt);
     }
 }
