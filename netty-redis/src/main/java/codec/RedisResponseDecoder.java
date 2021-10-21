@@ -18,8 +18,8 @@ public class RedisResponseDecoder extends ByteToMessageDecoder {
         if (start == '$') {
             // 读取长度
             int len = 0;
-            char cur;
-            while ((cur = (char) in.readByte()) != '\r') {
+            byte cur;
+            while ((cur = in.readByte()) != '\r') {
                 if (cur == '-') {
                     // 说明是空值，跳过后续的1\r\n
                     out.add(Optional.empty());
@@ -29,13 +29,13 @@ public class RedisResponseDecoder extends ByteToMessageDecoder {
                 len = len * 10 + (cur - '0');
             }
             // 当前cur位于\r，跳过后面的\n
-            in.readByte();
+            in.skipBytes(1);
 
             CharSequence sequence = in.readCharSequence(len, StandardCharsets.UTF_8);
             String msg = sequence.toString();
             out.add(Optional.of("\"" + msg + "\""));
             // 跳过结尾的\r\n
-            in.readBytes(2);
+            in.skipBytes(2);
         } else {
             // 单行字符串
             int index = ByteBufUtil.indexOf(Unpooled.buffer(1).writeByte('\r'), in);
@@ -46,7 +46,7 @@ public class RedisResponseDecoder extends ByteToMessageDecoder {
                 out.add(Optional.empty());
             }
             // 跳过结尾的\r\n
-            in.readBytes(2);
+            in.skipBytes(2);
         }
     }
 }
