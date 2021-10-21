@@ -36,8 +36,8 @@ public class RedisClient {
                         protected void initChannel(SocketChannel ch) throws Exception {
                             ch.pipeline().addLast(new RedisRequestEncoder());
                             ch.pipeline().addLast(new RedisResponseDecoder());
-                            ch.pipeline().addLast(new RedisResponseHandler());
-                            ch.pipeline().addLast(new RedisRequestHandler());
+                            ch.pipeline().addLast(new RedisClientResponseHandler());
+                            ch.pipeline().addLast(new RedisClientRequestHandler());
                         }
                     });
 
@@ -56,11 +56,6 @@ public class RedisClient {
                     continue;
                 }
                 future = channel.writeAndFlush(s);
-                future.addListener((ChannelFutureListener) f -> {
-                    if (!f.isSuccess()) {
-                        f.cause().printStackTrace();
-                    }
-                });
             }
             if (future != null) {
                 future.sync();

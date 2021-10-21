@@ -7,7 +7,7 @@ import io.netty.channel.ChannelPromise;
 
 import java.nio.charset.StandardCharsets;
 
-public class RedisRequestHandler extends ChannelOutboundHandlerAdapter {
+public class RedisClientRequestHandler extends ChannelOutboundHandlerAdapter {
 
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
