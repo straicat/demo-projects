@@ -11,8 +11,8 @@ import java.util.Map;
 
 @Service
 @Slf4j
-public class HttpClientService {
-    private static final OkHttpClient client = new OkHttpClient.Builder().build();
+public class HttpClient {
+    private static final OkHttpClient CLIENT = new OkHttpClient.Builder().build();
 
     public Response sendGetRequest(String url, Map<String, String> headers) throws IOException {
         Request.Builder builder = new Request.Builder()
@@ -23,7 +23,7 @@ public class HttpClientService {
             }
         }
         Request request = builder.build();
-        return client.newCall(request).execute();
+        return CLIENT.newCall(request).execute();
     }
 
     public Response sendGetRequest(String url) throws IOException {

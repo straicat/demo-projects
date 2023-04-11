@@ -1,6 +1,6 @@
 package com.example.tinyurl.gateway;
 
-import com.example.tinyurl.wrapper.HttpClientService;
+import com.example.tinyurl.wrapper.HttpClient;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Response;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,11 +17,11 @@ public class LeafService {
     private String leafUrl;
 
     @Resource
-    private HttpClientService httpClientService;
+    private HttpClient httpClient;
 
     public Long getId() {
         try {
-            Response response = httpClientService.sendGetRequest(leafUrl);
+            Response response = httpClient.sendGetRequest(leafUrl);
             if (response.isSuccessful() && response.body() != null) {
                 String text = Objects.requireNonNull(response.body()).string();
                 return Long.parseLong(text);
