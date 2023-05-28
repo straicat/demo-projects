@@ -15,21 +15,19 @@ public class RedisClient {
     @Resource
     private StringRedisTemplate stringRedisTemplate;
 
-    private static final String KEY_PREFIX = "tiny-url:";
-
     public void set(String key, String value) {
-        stringRedisTemplate.opsForValue().set(KEY_PREFIX + key, value);
+        stringRedisTemplate.opsForValue().set(key, value);
     }
 
     public void set(String key, String value, long timeout) {
         if (timeout > 0) {
-            stringRedisTemplate.opsForValue().set(KEY_PREFIX + key, value, timeout, TimeUnit.SECONDS);
+            stringRedisTemplate.opsForValue().set(key, value, timeout, TimeUnit.SECONDS);
         } else {
             set(key, value);
         }
     }
 
     public Object get(String key) {
-        return key != null ? stringRedisTemplate.opsForValue().get(KEY_PREFIX + key) : null;
+        return key != null ? stringRedisTemplate.opsForValue().get(key) : null;
     }
 }
