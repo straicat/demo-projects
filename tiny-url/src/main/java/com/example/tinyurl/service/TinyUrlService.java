@@ -130,7 +130,7 @@ public class TinyUrlService {
         if (globalId == null) {
             throw BizException.GLOBAL_ID_GENERATE_FAIL;
         }
-        if (globalId >= (62L ^ 8)) {
+        if (globalId >= 218340105584896L) {
             throw BizException.GLOBAL_ID_OVERFLOW;
         }
         String shortUrl = Base62Encoder.encode(globalId);
