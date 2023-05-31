@@ -42,10 +42,9 @@ public class TinyUrlService {
     private static final String KEY_PREFIX_SHORT_URL_CACHE = "tiny-url:short-url-cache:";
     private static final String KEY_PREFIX_LONG_URL_CACHE = "tiny-url:long-url-cache:";
     private static final String KEY_SHORT_URL_BLOOM = "tiny-url:short-url-bloom";
-    private static final String KEY_SHORT_URL_LOCK = "tiny-url:short-url-lock";
+    private static final String KEY_PREFIX_SHORT_URL_LOCK = "tiny-url:short-url-lock:";
 
     private RBloomFilter<Object> bloomFilter;
-    private RLock shortUrlLock;
     private ThreadLocalRandom random;
 
     @Value("${shorten.method}")
@@ -55,7 +54,6 @@ public class TinyUrlService {
     void init() {
         bloomFilter = redissonClient.getBloomFilter(KEY_SHORT_URL_BLOOM);
         bloomFilter.tryInit(100000000, 0.03);
-        shortUrlLock = redissonClient.getLock(KEY_SHORT_URL_LOCK);
         random = ThreadLocalRandom.current();
     }
 
@@ -76,8 +74,9 @@ public class TinyUrlService {
         }
 
         // 使用分布式锁避免缓存击穿
+        RLock shortUrlLock = redissonClient.getLock(KEY_PREFIX_SHORT_URL_LOCK + shortUrl);
         try {
-            if (shortUrlLock.tryLock(10, TimeUnit.SECONDS)) {
+            if (shortUrlLock != null && shortUrlLock.tryLock(5, 30, TimeUnit.SECONDS)) {
                 longUrl = (String) redisClient.get(KEY_PREFIX_SHORT_URL_CACHE + shortUrl);
                 if (longUrl != null) {
                     return longUrl;
@@ -89,7 +88,9 @@ public class TinyUrlService {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         } finally {
-            shortUrlLock.unlock();
+            if (shortUrlLock != null && shortUrlLock.isLocked() && shortUrlLock.isHeldByCurrentThread()) {
+                shortUrlLock.unlock();
+            }
         }
         return null;
     }
