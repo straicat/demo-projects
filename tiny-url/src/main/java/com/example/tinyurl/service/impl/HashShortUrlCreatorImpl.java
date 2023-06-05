@@ -1,5 +1,6 @@
 package com.example.tinyurl.service.impl;
 
+import com.example.tinyurl.enums.ErrorCode;
 import com.example.tinyurl.enums.ShortUrlShortenMethodEnum;
 import com.example.tinyurl.exception.BizException;
 import com.example.tinyurl.redis.ShortUrlBloomFilter;
@@ -34,7 +35,9 @@ public class HashShortUrlCreatorImpl implements ShortUrlCreator {
         while (true) {
             // 使用布隆过滤器判断Hash键是否可能重复
             if (!shortUrlBloomFilter.contains(shortUrl)) {
-                tinyUrlDbService.addUrl(shortUrl, longUrl);
+                if (!tinyUrlDbService.addUrl(shortUrl, longUrl)) {
+                    throw new BizException(ErrorCode.ADD_RECORD_EXCEPTION);
+                }
                 break;
             } else {
                 shortUrl = getShortUrlByHash(longUrl + random.nextInt());

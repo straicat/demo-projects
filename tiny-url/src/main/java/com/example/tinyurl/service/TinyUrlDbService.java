@@ -29,6 +29,6 @@ public class TinyUrlDbService {
         entity.setShortUrl(shortUrl);
         entity.setLongUrl(longUrl);
         entity.setCtime(System.currentTimeMillis());
-         return tinyUrlMappingMapper.insert(entity) > 0;
+        return tinyUrlMappingMapper.insert(entity) > 0;
     }
 }

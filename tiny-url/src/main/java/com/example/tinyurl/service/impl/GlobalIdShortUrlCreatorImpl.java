@@ -32,7 +32,9 @@ public class GlobalIdShortUrlCreatorImpl implements ShortUrlCreator {
             throw new BizException(ErrorCode.GLOBAL_ID_OVERFLOW);
         }
         String shortUrl = Base62Encoder.encode(globalId);
-        tinyUrlDbService.addUrl(shortUrl, longUrl);
+        if (!tinyUrlDbService.addUrl(shortUrl, longUrl)) {
+            throw new BizException(ErrorCode.ADD_RECORD_EXCEPTION);
+        }
         return shortUrl;
     }
 
