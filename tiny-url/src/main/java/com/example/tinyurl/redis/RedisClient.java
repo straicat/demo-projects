@@ -2,12 +2,12 @@ package com.example.tinyurl.redis;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;
 
-@Service
+@Component
 @Slf4j
 public class RedisClient {
 
