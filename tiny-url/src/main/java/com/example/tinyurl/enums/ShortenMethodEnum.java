@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum ShortUrlShortenMethodEnum {
+public enum ShortenMethodEnum {
     GLOBAL_ID(1, "基于全局ID"),
     HASH(2, "基于Hash"),
     ;

@@ -1,7 +1,7 @@
 package com.example.tinyurl.service.impl;
 
 import com.example.tinyurl.enums.ErrorCode;
-import com.example.tinyurl.enums.ShortUrlShortenMethodEnum;
+import com.example.tinyurl.enums.ShortenMethodEnum;
 import com.example.tinyurl.exception.BizException;
 import com.example.tinyurl.gateway.LeafService;
 import com.example.tinyurl.service.ShortUrlCreator;
@@ -16,7 +16,6 @@ import javax.annotation.Resource;
 @Slf4j
 public class GlobalIdShortUrlCreatorImpl implements ShortUrlCreator {
 
-    private static final Long GLOBAL_ID_OVERFLOW = 218340105584896L;
     @Resource
     private LeafService leafService;
     @Resource
@@ -28,9 +27,6 @@ public class GlobalIdShortUrlCreatorImpl implements ShortUrlCreator {
         if (globalId == null) {
             throw new BizException(ErrorCode.GLOBAL_ID_GENERATE_FAIL);
         }
-        if (globalId >= GLOBAL_ID_OVERFLOW) {
-            throw new BizException(ErrorCode.GLOBAL_ID_OVERFLOW);
-        }
         String shortUrl = Base62Encoder.encode(globalId);
         if (!tinyUrlDbService.addUrl(shortUrl, longUrl)) {
             throw new BizException(ErrorCode.ADD_RECORD_EXCEPTION);
@@ -40,6 +36,6 @@ public class GlobalIdShortUrlCreatorImpl implements ShortUrlCreator {
 
     @Override
     public Integer getShortenMethod() {
-        return ShortUrlShortenMethodEnum.GLOBAL_ID.getCode();
+        return ShortenMethodEnum.GLOBAL_ID.getCode();
     }
 }

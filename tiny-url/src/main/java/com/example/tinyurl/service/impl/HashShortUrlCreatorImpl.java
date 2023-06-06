@@ -1,7 +1,7 @@
 package com.example.tinyurl.service.impl;
 
 import com.example.tinyurl.enums.ErrorCode;
-import com.example.tinyurl.enums.ShortUrlShortenMethodEnum;
+import com.example.tinyurl.enums.ShortenMethodEnum;
 import com.example.tinyurl.exception.BizException;
 import com.example.tinyurl.redis.ShortUrlBloomFilter;
 import com.example.tinyurl.service.ShortUrlCreator;
@@ -57,6 +57,6 @@ public class HashShortUrlCreatorImpl implements ShortUrlCreator {
 
     @Override
     public Integer getShortenMethod() {
-        return ShortUrlShortenMethodEnum.HASH.getCode();
+        return ShortenMethodEnum.HASH.getCode();
     }
 }
