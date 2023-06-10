@@ -12,27 +12,27 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 @Slf4j
-public class SeckillStockServiceFactory {
+public class SeckillOrderServiceFactory {
 
-    private Map<Integer, SeckillStockService> seckillSkuAvailStockServiceMap;
+    private Map<Integer, SeckillOrderService> seckillOrderServiceMap;
 
     @Resource
-    private List<SeckillStockService> seckillStockServiceList;
+    private List<SeckillOrderService> seckillOrderServiceList;
 
     @Value("${cacheSyncMethod}")
     private Integer cacheSyncMethod;
 
     @PostConstruct
     void init() {
-        seckillSkuAvailStockServiceMap = new ConcurrentHashMap<>();
-        for (SeckillStockService service : seckillStockServiceList) {
+        seckillOrderServiceMap = new ConcurrentHashMap<>();
+        for (SeckillOrderService service : seckillOrderServiceList) {
             for (Integer method : service.cacheSyncMethods()) {
-                seckillSkuAvailStockServiceMap.put(method, service);
+                seckillOrderServiceMap.put(method, service);
             }
         }
     }
 
-    public SeckillStockService getService() {
-        return seckillSkuAvailStockServiceMap.get(cacheSyncMethod);
+    public SeckillOrderService getService() {
+        return seckillOrderServiceMap.get(cacheSyncMethod);
     }
 }

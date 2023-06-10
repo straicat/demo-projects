@@ -3,6 +3,8 @@ package com.example.seckillservice.service;
 import com.example.seckillservice.exception.BizException;
 import com.example.seckillservice.model.SeckillSkuStockResponse;
 
+import java.util.List;
+
 public interface SeckillStockService {
     /**
      * 查询可用库存
@@ -13,5 +15,5 @@ public interface SeckillStockService {
      */
     SeckillSkuStockResponse getAvailStock(Long skuId, Long activityId) throws BizException;
 
-    Integer getCacheSyncMethod();
+    List<Integer> cacheSyncMethods();
 }

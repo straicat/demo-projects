@@ -5,12 +5,23 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.Collections;
 
 @Component
 @Slf4j
 public class SeckillSkuAvailStockCache {
 
     private static final String KEY_PREFIX = "seckill:seckill-sku-avail-stock:";
+
+    private static final String DECR_STOCK_LUA = "if (redis.call('EXISTS', KEYS[1] == 1)) then\n" +
+            "    local stock = tonumber(redis.call('GET', KEYS[1]));\n" +
+            "    if (stock - KEYS[2] < 0) then\n" +
+            "        return -1;\n" +
+            "    end\n" +
+            "    redis.call('DECRBY', KEYS[1], KEYS[2]);\n" +
+            "    return stock - KEYS[2];\n" +
+            "end\n" +
+            "return -1;";
 
     @Resource
     private RedisClient redisClient;
@@ -43,5 +54,13 @@ public class SeckillSkuAvailStockCache {
             log.error("delete sku availStock cache fail! skuId={}, activityId={}", skuId, activityId);
             return false;
         }
+    }
+
+    public Integer tryDecrStock(Long skuId, Long activityId, Integer buyCnt) {
+        Integer stock = redisClient.execute(DECR_STOCK_LUA, Collections.singletonList(KEY_PREFIX + "s" + skuId + "_a" + activityId), buyCnt);
+        if (stock != null && stock >= 0) {
+            return stock;
+        }
+        return null;
     }
 }

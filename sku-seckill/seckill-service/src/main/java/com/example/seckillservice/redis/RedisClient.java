@@ -2,9 +2,12 @@ package com.example.seckillservice.redis;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
+import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -35,5 +38,10 @@ public class RedisClient {
             return stringRedisTemplate.delete(key);
         }
         return false;
+    }
+
+    public <T> T execute(String script, List<String> keys, Object... args) {
+        RedisScript<T> redisScript = new DefaultRedisScript<>(script);
+        return stringRedisTemplate.execute(redisScript, keys, args);
     }
 }
