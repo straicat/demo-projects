@@ -1,4 +1,4 @@
-package ketama;
+package common;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

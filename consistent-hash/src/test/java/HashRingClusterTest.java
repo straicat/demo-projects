@@ -1,11 +1,12 @@
-package ketama;
-
+import common.Cluster;
+import common.Node;
+import ketama.HashRingCluster;
 import org.junit.Test;
 
 import java.util.Map;
 import java.util.TreeMap;
 
-public class ClusterTest {
+public class HashRingClusterTest {
 
     @Test
     public void test() {

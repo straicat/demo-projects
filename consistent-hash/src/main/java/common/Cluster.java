@@ -1,4 +1,4 @@
-package ketama;
+package common;
 
 public interface Cluster {
     void addNode(Node node);
