@@ -25,9 +25,12 @@ public class SeckillSkuAvailStockCache {
     }
 
     public Integer get(Long skuId, Long activityId) {
-        String availStock = redisClient.get(KEY_PREFIX + "s" + skuId + "_a" + activityId).toString();
-        if (StringUtils.isNotEmpty(availStock)) {
-            return Integer.valueOf(availStock);
+        Object obj = redisClient.get(KEY_PREFIX + "s" + skuId + "_a" + activityId);
+        if (obj != null) {
+            String availStock = obj.toString();
+            if (StringUtils.isNotEmpty(availStock)) {
+                return Integer.valueOf(availStock);
+            }
         }
         return null;
     }

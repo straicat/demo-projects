@@ -24,10 +24,10 @@ public class CanalKafkaConsumer {
     @Resource
     private SeckillSkuAvailStockCache seckillSkuAvailStockCache;
 
-    @Value("${cache_sync_method}")
+    @Value("${cacheSyncMethod}")
     private Integer cacheSyncMethod;
 
-    @KafkaListener(topics = "canal-example", groupId = "canal-example-group.seckill_stock_info")
+    @KafkaListener(topics = "canal.seckill_stock_info", groupId = "canal.seckill_stock_info.cache_sync")
     public void listen(ConsumerRecord<?, ?> consumerRecord, Acknowledgment ack) {
         if (cacheSyncMethod != CacheSyncMethodEnum.CANAL_LISTEN_BINLOG.getCode()) {
             ack.acknowledge();
@@ -53,7 +53,6 @@ public class CanalKafkaConsumer {
                 Integer availStock = stock - lockStock;
                 seckillSkuAvailStockCache.set(skuId, activityId, availStock);
             }
-
         }
         ack.acknowledge();
     }
