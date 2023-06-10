@@ -1,8 +1,10 @@
 package com.example.seckillservice.service.impl;
 
+import com.example.seckillservice.enums.CacheSyncMethodEnum;
 import com.example.seckillservice.model.SeckillOrderRequest;
 import com.example.seckillservice.model.SeckillOrderResponse;
 import com.example.seckillservice.service.SeckillOrderService;
+import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,6 @@ public class SeckillOrderServiceAsyncImpl implements SeckillOrderService {
 
     @Override
     public List<Integer> cacheSyncMethods() {
-        return null;
+        return Lists.newArrayList(CacheSyncMethodEnum.ASYNC_ORDER_BY_MQ.getCode());
     }
 }
