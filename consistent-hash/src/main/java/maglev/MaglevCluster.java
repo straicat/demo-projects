@@ -16,13 +16,12 @@ public class MaglevCluster implements Cluster {
     private int[] entry;
     private final List<int[]> permutation;
     private int N = 0;
-    private String K1, K2;
+    private static final String K1 = RandomStringUtils.randomAlphanumeric(16);
+    private static final String K2 = RandomStringUtils.randomAlphanumeric(16);
 
     public MaglevCluster() {
         nodes = new ArrayList<>();
         permutation = new ArrayList<>();
-        K1 = RandomStringUtils.randomAlphanumeric(16);
-        K2 = RandomStringUtils.randomAlphanumeric(16);
     }
 
     private long h1(String name) {
