@@ -35,8 +35,13 @@ public class SeckillSkuAvailStockCache {
         return null;
     }
 
-    public void delete(Long skuId, Long activityId) {
-        redisClient.delete(KEY_PREFIX + "s" + skuId + "_a" + activityId);
-        log.info("delete sku stock cache: skuId={}", skuId);
+    public Boolean delete(Long skuId, Long activityId) {
+        if (redisClient.delete(KEY_PREFIX + "s" + skuId + "_a" + activityId)) {
+            log.info("delete sku availStock cache: skuId={}, activityId={}", skuId, activityId);
+            return true;
+        } else {
+            log.error("delete sku availStock cache fail! skuId={}, activityId={}", skuId, activityId);
+            return false;
+        }
     }
 }

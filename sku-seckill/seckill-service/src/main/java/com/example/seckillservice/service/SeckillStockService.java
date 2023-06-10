@@ -3,7 +3,7 @@ package com.example.seckillservice.service;
 import com.example.seckillservice.exception.BizException;
 import com.example.seckillservice.model.SeckillSkuStockResponse;
 
-public interface SeckillSkuAvailStockService {
+public interface SeckillStockService {
     /**
      * 查询可用库存
      * @param skuId

@@ -46,7 +46,9 @@ public class CanalKafkaConsumer {
             Long activityId = Long.parseLong(datum.get("activity_id").toString());
 
             if ("DELETE".equals(type)) {
-                seckillSkuAvailStockCache.delete(skuId, activityId);
+                if (!seckillSkuAvailStockCache.delete(skuId, activityId)) {
+                    return;
+                }
             } else if ("UPDATE".equals(type) || "INSERT".equals(type)) {
                 Integer stock = Integer.parseInt(datum.get("stock").toString());
                 Integer lockStock = Integer.parseInt(datum.get("lock_stock").toString());

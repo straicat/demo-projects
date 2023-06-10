@@ -13,23 +13,23 @@ import java.util.stream.Collectors;
 
 @Component
 @Slf4j
-public class SeckillSkuAvailStockServiceFactory {
+public class SeckillStockServiceFactory {
 
-    private Map<Integer, SeckillSkuAvailStockService> seckillSkuAvailStockServiceMap;
+    private Map<Integer, SeckillStockService> seckillSkuAvailStockServiceMap;
 
     @Resource
-    private List<SeckillSkuAvailStockService> seckillSkuAvailStockServiceList;
+    private List<SeckillStockService> seckillStockServiceList;
 
     @Value("${cacheSyncMethod}")
     private Integer cacheSyncMethod;
 
     @PostConstruct
     void init() {
-        seckillSkuAvailStockServiceMap = seckillSkuAvailStockServiceList.stream()
-                .collect(Collectors.toMap(SeckillSkuAvailStockService::getCacheSyncMethod, Function.identity()));
+        seckillSkuAvailStockServiceMap = seckillStockServiceList.stream()
+                .collect(Collectors.toMap(SeckillStockService::getCacheSyncMethod, Function.identity()));
     }
 
-    public SeckillSkuAvailStockService getService() {
+    public SeckillStockService getService() {
         return seckillSkuAvailStockServiceMap.get(cacheSyncMethod);
     }
 }

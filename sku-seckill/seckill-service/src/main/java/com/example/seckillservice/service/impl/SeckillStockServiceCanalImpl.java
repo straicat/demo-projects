@@ -4,16 +4,15 @@ import com.example.seckillservice.enums.CacheSyncMethodEnum;
 import com.example.seckillservice.exception.BizException;
 import com.example.seckillservice.model.SeckillSkuStockResponse;
 import com.example.seckillservice.redis.SeckillSkuAvailStockCache;
-import com.example.seckillservice.service.SeckillSkuAvailStockService;
+import com.example.seckillservice.service.SeckillStockService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 
-
 @Service
 @Slf4j
-public class SeckillSkuAvailStockServiceCanalImpl implements SeckillSkuAvailStockService {
+public class SeckillStockServiceCanalImpl implements SeckillStockService {
 
     @Resource
     private SeckillSkuAvailStockCache seckillSkuAvailStockCache;

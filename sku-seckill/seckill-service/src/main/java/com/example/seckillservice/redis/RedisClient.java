@@ -30,9 +30,10 @@ public class RedisClient {
         return key != null ? stringRedisTemplate.opsForValue().get(key) : null;
     }
 
-    public void delete(String key) {
+    public Boolean delete(String key) {
         if (key != null) {
-            stringRedisTemplate.delete(key);
+            return stringRedisTemplate.delete(key);
         }
+        return false;
     }
 }

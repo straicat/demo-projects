@@ -4,8 +4,8 @@ import com.example.seckillservice.enums.ErrorCode;
 import com.example.seckillservice.exception.BizException;
 import com.example.seckillservice.model.ApiResult;
 import com.example.seckillservice.model.SeckillSkuStockResponse;
-import com.example.seckillservice.service.SeckillSkuAvailStockService;
-import com.example.seckillservice.service.SeckillSkuAvailStockServiceFactory;
+import com.example.seckillservice.service.SeckillStockService;
+import com.example.seckillservice.service.SeckillStockServiceFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,11 +20,11 @@ import javax.annotation.Resource;
 public class SeckillSkuStockController {
 
     @Resource
-    private SeckillSkuAvailStockServiceFactory seckillSkuAvailStockServiceFactory;
+    private SeckillStockServiceFactory seckillStockServiceFactory;
 
     @GetMapping("/getAvailStock")
     public ApiResult<SeckillSkuStockResponse> getAvailStock(@RequestParam("skuId") Long skuId, @RequestParam("activityId") Long activityId) {
-        SeckillSkuAvailStockService service = seckillSkuAvailStockServiceFactory.getService();
+        SeckillStockService service = seckillStockServiceFactory.getService();
         if (service == null) {
             return new ApiResult<>(ErrorCode.NO_SERVICE_FOUND.getCode(), ErrorCode.NO_SERVICE_FOUND.getDesc(), null);
         }
