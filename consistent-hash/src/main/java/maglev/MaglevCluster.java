@@ -3,8 +3,6 @@ package maglev;
 import common.Cluster;
 import common.Node;
 import io.whitfin.siphash.SipHasher;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.RandomUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,8 +14,8 @@ public class MaglevCluster implements Cluster {
     private int[] entry;
     private final List<int[]> permutation;
     private int N = 0;
-    private static final String K1 = RandomStringUtils.randomAlphanumeric(16);
-    private static final String K2 = RandomStringUtils.randomAlphanumeric(16);
+    private static final String K1 = "u8wOJlug8qyHWvV6";
+    private static final String K2 = "GlTnewYkqVGSORFh";
 
     public MaglevCluster() {
         nodes = new ArrayList<>();
@@ -52,7 +50,7 @@ public class MaglevCluster implements Cluster {
                 if (n == M) {
                     for (int j = 0; j < M; j++) {
                         if (entry[j] == -1) {
-                            entry[j] = RandomUtils.nextInt(0, N);
+                            entry[j] = 0;
                         }
                     }
                     return;
