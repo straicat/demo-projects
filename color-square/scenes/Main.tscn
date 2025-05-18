@@ -1,0 +1,69 @@
+[gd_scene load_steps=9 format=3 uid="uid://cdrkii2s0t46c"]
+
+[ext_resource type="Script" uid="uid://dsxd4h5ytp01w" path="res://gd/Main/main.gd" id="1_c01mt"]
+[ext_resource type="Script" uid="uid://ffixwaku863y" path="res://gd/Main/board.gd" id="2_nxtc6"]
+[ext_resource type="Script" uid="uid://doqkn4l3ak8tj" path="res://gd/Main/color_rect.gd" id="3_jlsqs"]
+[ext_resource type="Script" uid="uid://bkmsj1xpj7y7j" path="res://gd/Main/alert_dialog.gd" id="4_jlsqs"]
+[ext_resource type="Script" uid="uid://mc8alh7voy7o" path="res://gd/Main/color_select.gd" id="4_q8u5g"]
+[ext_resource type="Script" uid="uid://6su5n00f8uch" path="res://gd/Main/step.gd" id="5_lhr70"]
+[ext_resource type="Script" uid="uid://b8e6a62kdqesm" path="res://gd/Main/target.gd" id="6_wp0k4"]
+[ext_resource type="Script" uid="uid://bkpulbg04stja" path="res://gd/Main/back.gd" id="7_nxtc6"]
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_c01mt")
+metadata/_edit_vertical_guides_ = [576.0]
+
+[node name="ColorBoard" type="PanelContainer" parent="."]
+offset_left = 256.0
+offset_top = 40.0
+offset_right = 896.0
+offset_bottom = 552.0
+
+[node name="Board" type="Node2D" parent="ColorBoard"]
+script = ExtResource("2_nxtc6")
+
+[node name="ColorRect" type="ColorRect" parent="ColorBoard/Board"]
+offset_left = 50.0
+offset_top = 50.0
+offset_right = 50.0
+offset_bottom = 50.0
+script = ExtResource("3_jlsqs")
+
+[node name="AlertDialog" type="AcceptDialog" parent="ColorBoard/Board"]
+size = Vector2i(300, 200)
+script = ExtResource("4_jlsqs")
+
+[node name="ColorSelect" type="HFlowContainer" parent="." node_paths=PackedStringArray("target_node")]
+custom_minimum_size = Vector2(64, 0)
+offset_left = 976.0
+offset_top = 67.0
+offset_right = 1059.0
+offset_bottom = 408.0
+script = ExtResource("4_q8u5g")
+target_node = NodePath("../ColorBoard/Board")
+
+[node name="Step" type="RichTextLabel" parent="."]
+offset_left = 60.0
+offset_top = 60.0
+offset_right = 228.0
+offset_bottom = 131.0
+bbcode_enabled = true
+script = ExtResource("5_lhr70")
+
+[node name="Target" type="RichTextLabel" parent="."]
+offset_left = 21.0
+offset_top = 500.0
+offset_right = 253.0
+offset_bottom = 550.0
+bbcode_enabled = true
+script = ExtResource("6_wp0k4")
+
+[node name="Back" type="Button" parent="."]
+offset_left = 973.0
+offset_top = 479.0
+offset_right = 1076.0
+offset_bottom = 532.0
+text = "返回"
+script = ExtResource("7_nxtc6")
+
+[connection signal="pressed" from="Back" to="." method="_on_back_pressed"]
